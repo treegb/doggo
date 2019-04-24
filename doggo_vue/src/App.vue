@@ -1,12 +1,18 @@
 <template>
   <div id="app">
     <headerr
-      v-on:toggleNav="toggleNav"
       v-bind:crrNav="crrNav"
+      v-on:toggleNav="toggleNav"
     />
-    <game v-show="crrNav === 'navGame'" />
+    <game
+      v-show="crrNav === 'navGame'"
+      v-bind:gameHist="gameHist"
+    />
     <rules v-show="crrNav === 'navRules'" />
-    <score v-show="crrNav === 'navScore'" />
+    <score
+      v-show="crrNav === 'navScore'"
+      v-bind:gameHist="gameHist"
+      />
   </div>
 </template>
 
@@ -17,7 +23,7 @@ import score from './components/score.vue'
 import headerr from './components/headerr.vue'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     game,
     rules,
@@ -27,8 +33,20 @@ export default {
   data () {
     return {
       crrNav: "navGame",
-      foo: "x"
+      gameHist: {
+        cheatCount: 0,
+        gameMode: null,
+        timeUsed: null,
+        roundHist: [],
+      },
     };
+  },
+  created () {
+    console.debug = () => {};
+    /* .Temporary disable all { console.debug() } messages. It is consider by most people
+     * that showing { console.log() } (and related) is not a "good practice"
+     * though I don't agree it. But still I follow this practice. */
+    console.debug(".In { apps.vue }.");
   },
   methods: {
     toggleNav (crrNavEmitted) {
@@ -43,6 +61,8 @@ export default {
   --clorMain1: #17756A;
   --clorMain1Shade1: #59A39A;
   --clorMain1Shade2: #8dc9c2;
+  --clorOk: #177539;
+  --clorError: #757517;
   --greyClorMain1: #777;
   --greyClorMain2: #a3a3a3;
   --greyClorMain3: #ccc;

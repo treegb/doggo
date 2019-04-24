@@ -5,8 +5,28 @@ export function fetchBreedList () {
   // .This is unrelated to { dog api }, I keep it here just for testing purpose.
   .then((response) => {
     if (response.ok) {
-      //console.log(".Cool, successfully get json from dogApi.");
+      //console.debug(".Cool, successfully get json from dogApi.");
       return response.json();
+
+              // .For testing purpose. Use this "fixed" data for testing.
+              // ========================================================
+              //return new Promise((resolve, reject) => {
+              //  resolve({
+              //    "status": "success",
+              //    "message": {
+              //        "affenpinscher": [],
+              //        "bulldog": [
+              //            "boston",
+              //            "french"
+              //        ],
+              //        "chow": [],
+              //        "dane": [
+              //            "great"
+              //        ],
+              //    }
+              //  });
+              //});
+              // ========================================================
     } else {
       return new Promise ((resolve, reject) => {
         reject("None");
@@ -214,67 +234,30 @@ export function fetchBreedList () {
   //}
   // ==================================
 }
-export function fetchImageByBreed (mainBreed, subBreed) {
-  var fetchUrl;
+export function getImageSrcByBreed (mainBreed, subBreed) {
+  var apiUrl;
   if (subBreed === null) {
-    fetchUrl = `https://dog.ceo/api/breed/${mainBreed}/images/random/1`;
+    apiUrl = `https://dog.ceo/api/breed/${mainBreed}/images/random/1`;
   } else {
-    fetchUrl = `https://dog.ceo/api/breed/${mainBreed}/${subBreed}/images/random/1`;
+    apiUrl = `https://dog.ceo/api/breed/${mainBreed}/${subBreed}/images/random/1`;
   }
-  return fetch(fetchUrl)
+
+  return fetch(apiUrl)
+  // .Return { promise } immediately.
   .then((response) => {
     if (response.ok) {
-            console.log("peanut 2");
       return response.json();
     } else {
-            console.log("peanut 3");
-      return new Promise ((resolve, reject) => {
-        reject("None");
-      });
+      return new Promise((resolve, reject) => {reject(".{ response.ok) } is not true.");});
     }
   })
   .then((json) => {
-            console.log("peanut 4");
-            console.log(`Now I getting that image url from ${json.message[0]}.`);
-            var myHeader = new Headers();
-            myHeader.append("Content-Type", "image/jpg");
-            myHeader.append("User-Agent", "MY-UA-STRING");
-            //myHeader.append("Origin", "https://dog.ceo");
-            myHeader.append("Access-Control-Allow-Origin", '*');
-
-    return fetch  (json.message[0], {
-      method: "GET",
-      mode: "cors",
-      //headers: {
-      //  "origin": "https://dog.ceo",
-      //  "User-Agent": "MY-UA-STRING"
-      //}
-      //headers: myHeader
-    });
-  })
-  .then((response) => {
-    //if (response.ok) {
-    //        console.log("peanut 5");
-    //  return response.blob();
-    //} else {
-    //        console.log("peanut 6");
-    //  return new Promise ((resolve, reject) => {
-    //    reject("None");
-    //  });
-    //}
-            return response.blob();
-  })
-  .catch((reject) => {
-            console.log("peanut 7");
-    return new Promise ((resolveInner, rejectInner) => {
-      rejectInner({
-        "rejectTitle": "Bad, failed to get json from dogApi.",
-        "rejectContent": reject,
-      });
-    });
+    return new Promise((resolve, reject) => {resolve(json.message);});
   });
 }
 export function randomBreed (breedList) {
+  /* .Generate a raondom breed (will always included main breed,
+   * and sometimes included sub breed too), from given breedList. */
   var mainBreed;
   var subBreed = null;
   var breedListMainBreedSize;
@@ -300,7 +283,7 @@ export function randomBreed (breedList) {
   // =====================
   breedListSubBreedSize = breedList[mainBreed].length;
   if (breedListSubBreedSize === 0) {
-    subBreed = null;
+    // .Do nothing, so subBreed = null.
   } else {
     breedListSubBreedIndexRandom = Math.floor(Math.random()*breedListSubBreedSize);
     subBreed = breedList[mainBreed][breedListSubBreedIndexRandom];
@@ -314,6 +297,7 @@ export function randomBreed (breedList) {
   return {
     mainBreed,
     subBreed
+    // .{ SubBreed } might be { null }, if there is no sub breed for this main breed.
   };
 }
 function sizeOfObjectInDepthOne (breedList) {
@@ -325,8 +309,8 @@ function sizeOfObjectInDepthOne (breedList) {
    * ======================
    *var foo = ["a","b", "c"];
    *var bar = {"a":"aa","b":"bb", "c": {"c1":"c11","c2":"c22"},"d":"dd"};
-   * ======================
-   */
+   * ====================== */
+
   var size = 0;
   for (let i in breedList) {
     size++;
