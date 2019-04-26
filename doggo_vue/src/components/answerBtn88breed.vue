@@ -5,7 +5,9 @@
     v-bind:data-id="aBreedMix.fullBreed"
     v-bind:style="{'background-color': btnBackgroundColor}"
     v-on:click="aswBtnOnClick"
-  >{{ aBreedMix.fullBreedName }}</button>
+  >
+    <span class="innerCtnr">{{ aBreedMix.fullBreedName }}</span>
+  </button>
 </template>
 
 <script>
@@ -72,8 +74,20 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 button {
+  display: block;
+  min-width: 10em;
+  height: 2.6em;
+  margin: 0.5em 0;
+  padding: 0 1.3em;
+  box-sizing: border-box;
+  border-radius: 0.3em;
   border: calc(0.0625em * 1) solid var(--greyClorMain2);
   /*background-color: var(--clorMain1);*/
   color: var(--greyClorMain2);
+  font-family: "aclonica", "helvetica", sans-serif;
+  letter-spacing: calc(0.0625em * 2);
+}
+button .innerCtnr {
+  font-size: 1.0em;
 }
 </style>

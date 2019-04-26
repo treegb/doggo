@@ -1,5 +1,7 @@
 export function fetchBreedList () {
-  //console.log(".Requesting dogApi.");
+  /* .Requesting { dogApi } for complete breed list. This breed list will include all
+   * possible breeds in { dogApi }. */
+
   return fetch("https://dog.ceo/api/breeds/list/all")
   //fetch("https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store/products.json");
   // .This is unrelated to { dog api }, I keep it here just for testing purpose.

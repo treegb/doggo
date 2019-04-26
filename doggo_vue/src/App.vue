@@ -13,6 +13,7 @@
       v-show="crrNav === 'navScore'"
       v-bind:gameHist="gameHist"
       />
+    <footer><p>Build with Vue.js</p></footer>
   </div>
 </template>
 
@@ -67,17 +68,42 @@ export default {
   --greyClorMain2: #a3a3a3;
   --greyClorMain3: #ccc;
 }
+@font-face {
+  /* .A standard, general purpose font. */
+  font-family: "helvetica";
+  src: url('./font/helvetica.woff')
+       format("woff");
+}
+@font-face {
+  /* .A more enthusiastic font. */
+  font-family: "aclonica";
+  src: url('./font/aclonica.ttf')
+       format("truetype");
+}
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: "helvetica", sans-serif;
 }
 h2 {
   color: var(--greyClorMain2);
   text-align: center;
   font-size: 1.2rem;
-  letter-spacing: calc(0.0625rem * 1);
-  word-spacing: calc(0.0625rem * 5);
+  letter-spacing: calc(0.0625rem * 2);
+  word-spacing: calc(0.0625rem * 7);
   margin:2em auto;
+  font-weight: 900;
+}
+footer {
+  margin: 8em 0 0 0;
+  background-color: var(--clorMain1);
+  min-height: 3.4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--greyClorMain1);
+}
+footer > * {
+  font-size: 0.87em;
 }
 </style>

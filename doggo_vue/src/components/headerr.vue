@@ -77,8 +77,9 @@ h1 {
   line-height: 100%;
   margin: 0.4rem 0;
   color: var(--clorMain1Shade1);
-  font-family: serif;
+  font-family: "aclonica", serif;
   font-size: 2.5em;
+  font-weight: 100;
 }
 .subTitle {
   grid-area: subTitle;

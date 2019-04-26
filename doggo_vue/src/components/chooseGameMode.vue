@@ -9,7 +9,7 @@
         -->
         <div
           v-bind:class="classs.guessTheBreed"
-          v-bind:style="{'transition': style.allGameModes.clickAnimationTimeCSS}"
+          v-bind:style="{'transition': style.allGameModes.cssTransitionBtn}"
           v-on:click="chooseGameMode('guessTheBreed')"
         >
           <!--
@@ -17,21 +17,42 @@
             since the animation timing should sync with javascript { setTimeout() }.
             .See id "190413m233023".
           -->
-          <div><div class="innerWrapper">Guess The Breed</div></div>
+          <div class="textCtnr"
+            ><div class="innerWrapper"
+              ><span class="firstLetter">G</span>uess<br
+              ><span class="firstLetter">T</span>he<br
+              ><span class="firstLetter">B</span>reed</div
+            ></div
+          >
           <!--
             .The { innerWrapper } container is added only to fix the position problem
             after I create aspect ratio effect.
             See CSS to see how it works.
+            .Above html code is actually be treated "a single line", not multiple lines,
+            you see I wrap many ending tag (i.e. ">") to next line,
+            this will assure 2 things:
+            1. The html is still treated as one line by parser of browser.
+            2. There is no any unexpected gaps (space character) as
+            [ by-product ]-[ side effect ] of using new line ("\n", or enter key)
+            in html structure. If you don't break ending tag (i.e. ">") like this,
+            you sometimes see this [ "bug" ]-[ by-product ]-[ side effect ].
           -->
         </div>
       </div>
       <div class="gameModeCntn findTheOddOne">
         <div
           v-bind:class="classs.findTheOddOne"
-          v-bind:style="{'transition': style.allGameModes.clickAnimationTimeCSS}"
+          v-bind:style="{'transition': style.allGameModes.cssTransitionBtn}"
           v-on:click="chooseGameMode('findTheOddOne')"
         >
-          <div><div class="innerWrapper">Find The Odd One</div></div>
+          <div class="textCtnr"
+            ><div class="innerWrapper"
+              ><span class="firstLetter">F</span>ind<br
+              ><span class="firstLetter">T</span>he<br
+              ><span class="firstLetter">O</span>dd<br
+              ><span class="firstLetter">O</span>ne</div
+            ></div
+          >
         </div>
       </div>
     </div>
@@ -41,6 +62,21 @@
 <script>
 export default {
   name: 'chooseGameMode',
+  created () {
+    /* .Depends.
+     * ==========
+     * .this.style.allGameModes.animTimebtn.
+     * ==========
+     *
+     * .Results.
+     * ==========
+     * .this.style.allGameModes.cssTransitionBtn.
+     * ========== */
+
+    this.style.allGameModes.cssTransitionBtn = "all " + (
+      this.style.allGameModes.animTimebtn / 1000) + "s";
+    // .So the final string will be something like "transition: all 0.9s".
+  },
   data () {
     var dataa = {
       classs: {
@@ -52,17 +88,22 @@ export default {
       },
       style: {
         allGameModes: {
-          clickAnimationTime: 900,
-          // .See id "190413m233023".
-          clickAnimationTimeCSS: ""
+          animTimebtn: 900,
+          /* .Decide the transition duration of game mode selection button will takes,
+           * after user choose a game mode.
+           * .See id "190413m233023". */
+          animTimeNewScene: 1600,
+          /* .Decide the transition duration from "game mode selection scene,
+           * to game scene (first round).
+           * . Notice, this property should be equal or greater than { animTimebtn }.*/
+          cssTransitionBtn: "",
+          // .Will be calculated later.
         }
       },
       state: {
         ifAllowChooseGameMode: true
       }
     };
-    dataa.style.allGameModes.clickAnimationTimeCSS = "all " + ( dataa.style.allGameModes.clickAnimationTime / 1000) + "s";
-    // .So the final string will be something like "transition: all 0.9s".
     return dataa;
   },
   methods: {
@@ -80,7 +121,7 @@ export default {
         }
         setTimeout( () => {
             this.$emit("chooseGameMode", gameMode);
-          }, this.style.allGameModes.clickAnimationTime);
+          }, this.style.allGameModes.animTimeNewScene);
       }
     }
   }
@@ -123,7 +164,7 @@ export default {
     position: relative;
     /* .This is added because of child ,, { position: absolute }. */
   }
-  .allGameModes .gameMode > * {
+  .allGameModes .gameMode .textCtnr {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -136,14 +177,14 @@ export default {
   .allGameModes .gameMode.selected {
     box-shadow: 0 0 3em var(--clorMain1Shade1);
   }
-  .allGameModes .gameMode.selected > * {
+  .allGameModes .gameMode.selected .textCtnr {
     font-weight: 900;
   }
   .allGameModes .gameMode.nonSelected {
     background-color: var(--greyClorMain2);
     box-shadow: unset;
   }
-  .allGameModes .gameMode.nonSelected > * {
+  .allGameModes .gameMode.nonSelected .textCtnr {
     color: var(--greyClorMain3);
   }
   .allGameModes .gameMode .innerWrapper {
@@ -151,5 +192,23 @@ export default {
     user-select: none;
     /* .Don't know why click on this element, the text will be selected,
      * so I have to add this extra property to suppress it. */
+
+    /* .About: Here I try to make graphic effect on front.
+     * .Graphic effect: The letters is spreded like "matrix", only to make it
+     * feeling "cool".
+     * .Should sync with comment id 190425m160720.
+     * ============================================================================= */
+    letter-spacing: 1.0rem;
+    line-height: 1.7rem;
+    font-size: 0.8em;
+    /* ============================================================================= */
+  }
+  .allGameModes .gameMode.selected .innerWrapper {
+    /* .Should sync with comment id 190425m160720. */
+    line-height: 1.1rem;
+    font-size: 0.8em;
+  }
+  .allGameModes .gameMode .firstLetter {
+    font-weight: 900;
   }
 </style>

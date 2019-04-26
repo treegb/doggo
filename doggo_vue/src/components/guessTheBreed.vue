@@ -1,6 +1,5 @@
 <template>
   <div id="guessTheBreed">
-    <button v-on:click="setANewRound()">Testing getting new breed image</button>
     <main
       v-bind:class="cssClass.cssClassTransitionSpecific"
       v-bind:style="cssClassRoundTransitionStateStateTransition"
@@ -118,7 +117,8 @@ export default {
            *     fullBreed: ...,
            *     fullBreedName: ...,
            *   }
-           * ]. */
+           * ].
+           * .To see the full "data structure", see comment id  190425m231737. */
           ifChosenAnswerCorrect: null
           /* .Though we can get the clue (if current round user chose the right answer
            * or not) from looping through all { crrRound ,, answer ,, breeds } elements,
@@ -155,7 +155,8 @@ export default {
          * { computed style } at this moment. */
       },
       animationTime: {
-        roundTransition: 1300
+        roundTransition: 1100,
+        timeDelayAfterAnwerChosen: 1700
       }
     };
   },
@@ -182,10 +183,7 @@ export default {
        * ==========
        * .this.answerOptionsAmount.
        * .this.answerOptionsAvailableAmountMin.
-       * .this.cheatStock.
        * .this.crrRound.question.fullBreed.
-       * .this.gameHist.cheatCount.
-       * .this.ifChosenAnswerCorrect.
        * .this.answerOptionsAvailableAmount().
        * .this.aswBtn88view().
        * .this.cheatBtn88view().
@@ -197,17 +195,35 @@ export default {
        *
        * .Results.
        * ==========
+       * .this.cheatStock.
+       * .this.crrRound.answer.breeds.ifUserChooseThisAsw.
+       * .this.gameHist.cheatCount.
+       * .this.ifChosenAnswerCorrect.
        * ========== */
-
 
       // .For answer buttons.
       if (argg.controller === "aswBtnClick") {
         let argForAswBtn88view = {};
+        let getThatAswRealObjectWhichTheControllerIsDealingTo = null;
+        /* .We have 2 piece of data, one is { argg } sent by { controller },
+         * another is { this.crrRound } which { answerHandler88model } could
+         * access itself. So what this temporary variable will holding
+         * the { this.crrRound.answer.breeds.thatAswTheControllerIsDealingTo },
+         * for other process to do further things. */
         if (!this.checkAswBtnClickableState(argg.answerBreed)) {
           return;
           // .Abort and do nothing.
         }
         // .Check if this answer button is clickable.
+        getThatAswRealObjectWhichTheControllerIsDealingTo = this.crrRound.answer.breeds
+          .find((itm) => {
+            if (itm.fullBreed === argg.answerBreed.fullBreed) {
+              return true;
+            }
+          });
+        getThatAswRealObjectWhichTheControllerIsDealingTo.ifUserChooseThisAsw = true;
+        /* .Whatever answer option (button) user choose, this answer option
+         * will have corresponding property { ifUserChooseThisAsw } change to "true". */
         if (argg.answerBreed.fullBreed === this.crrRound.question.fullBreed) {
           this.createAnEmptySubObjForThisObjWithPptNameIfNotExists(
             argForAswBtn88view,
@@ -220,8 +236,17 @@ export default {
             argForAswBtn88view,
             argg.answerBreed.fullBreed
           );
+          this.createAnEmptySubObjForThisObjWithPptNameIfNotExists(
+            argForAswBtn88view,
+            this.crrRound.question.fullBreed
+          );
+          /* .User will get hint about both right answer (not he chose),
+           * and wrong answer (he chose), if he chose a wrong answer.
+           * =========================================================== */
           argForAswBtn88view[argg.answerBreed.fullBreed].btnVisualState = "error";
+          argForAswBtn88view[this.crrRound.question.fullBreed].btnVisualState = "ok";
           this.ifChosenAnswerCorrect = false;
+          /* =========================================================== */
         }
         for (let breed of argg.answerBreeds) {
           this.createAnEmptySubObjForThisObjWithPptNameIfNotExists(
@@ -541,10 +566,16 @@ export default {
        *
        * .Depends.
        * ==========
+       * .this.animationTime.timeDelayAfterAnwerChosen();
+       * .this.setANewRound();
        * .this.updateGameHistRoundHist().
        * ========== */
 
        this.updateGameHistRoundHist();
+       setTimeout(() => {
+         this.setANewRound();
+       }, this.animationTime.timeDelayAfterAnwerChosen);
+       // .Todo: Not safe enough! Should bind { this } keword inside { setTimeout }!
     },
     fullBreedId (mainBreed, subBreed) {
       // .If { mainBreed } = "retriever", { subBreed } "golden", return "retrieverGolden".
@@ -602,6 +633,7 @@ export default {
           subBreed: elm.subBreed,
           fullBreed: elm.fullBreed,
           fullBreedName: elm.fullBreedName,
+          ifUserChooseThisAsw: elm.ifUserChooseThisAsw,
         };
         return rslt;
       });
@@ -810,6 +842,11 @@ export default {
           subBreed: null,
           fullBreed: null,
           fullBreedName: null,
+          ifUserChooseThisAsw: false,
+          /* .Acronym: "If user choose this answer".
+           * .This could be wrong answer or right answer, since this property
+           * only defines if user choose this answer, not if this answer
+           * is right or wrong. */
           btnVisualState: "neutral",
           btnClickableState: true,
         };
@@ -819,7 +856,8 @@ export default {
          * data related to buttons, to here ({ crrRound.answer.breeds }), it makes
          * the code higly coupled and bug prone. But so far my application is
          * reletive small, seperate the data and write sync logic,
-         * will makes it more complex. */
+         * will makes it more complex.
+         * .See comment id 190425m231737. */
         if (correctAnswerIndex === answerLoopCount) {
           /* .Will generate correct answer only.
            * .In this case, instead of generate a random answer breed,
@@ -998,19 +1036,14 @@ main {
   align-items: center;
 }
 .answerBtnCtn button {
-  min-width: 10em;
-  height: 2.5em;
-  display: block;
-  margin: 0.2em 0;
-  padding: 0 0.5em;
-  box-sizing: border-box;
-  border-radius: 0.3em;
+  /* .Moved into { answerBtn88breed } component. */
 }
 .cheatBtn {
   grid-area: cheatBtn;
   /*justify-self: center;*/
   margin-left: 1em;
   margin-right: 1em;
+  justify-self: center;
 }
 .roundTransitionStateStateNormal {
   opacity: 1;
