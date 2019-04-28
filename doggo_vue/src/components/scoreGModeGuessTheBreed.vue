@@ -12,14 +12,14 @@
           v-if="aswWrong"
           class="answer wrong"
         >
-          <div class="svg">X</div>
+          <svgSymbolCross />
           <div class="breedName">{{ aswWrong }}</div>
         </div>
         <div
           v-if="aswCorrect"
           class="answer correct"
         >
-          <div class="svg">V</div>
+          <svgSymbolTick />
           <div class="breedName">{{ aswCorrect }}</div>
         </div>
       </div>
@@ -28,8 +28,14 @@
 </template>
 
 <script>
+import svgSymbolTick from "./svgSymbolTick.vue";
+import svgSymbolCross from "./svgSymbolCross.vue";
 export default {
   name: 'scoreGModeGuessTheBreed',
+  components: {
+    svgSymbolTick,
+    svgSymbolCross,
+  },
   props: [
     "roundHist",
     "idx"
@@ -82,6 +88,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  h2 {
+    margin-top: 10em;
+    margin-bottom: 4em;
+  }
   .scoreARound {
     display: flex;
     flex-wrap: wrap;
@@ -103,40 +113,31 @@ export default {
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: center;
-
-            border: 1px solid red;
   }
   .scoreARound .answers .answer {
-    border: 1px solid blue;
+    margin-top: 0.6em;
+    margin-bottom: 0.6em;
   }
   .scoreARound .answers .answer > * {
     display: inline-block;
     vertical-align: middle;
   }
-          .scoreARound .answer .svg {
-            /* .Todo: Replace the class name ".svg", to better name
-             * , and make indentation to normal. */
-            width: 2em;
-            height: 2em;
-            border: 1px solid green;
-            font-color: green;
-          }
-          .scoreARound .answer .breedName {
-          }
-          .scoreARound .answer.correct .svg {
-            border: 1px solid green;
-            font-color: green;
-          }
-          .scoreARound .answer.correct .breedName {
-            border: 1px solid green;
-            font-color: green;
-          }
-          .scoreARound .answer.wrong .svg {
-            border: 1px solid red;
-            font-color: red;
-          }
-          .scoreARound .answer.wrong .breedName {
-            border: 1px solid red;
-            font-color: red;
-          }
+  .scoreARound .answer .svgSymbolTick,
+  .scoreARound .answer .svgSymbolCross {
+    width: 2em;
+  }
+  .scoreARound .answer .breedName {
+    margin-left: 1em;
+    font-family: "aclonica";
+  }
+  .scoreARound .answer.correct .svgSymbolTick {
+  }
+  .scoreARound .answer.correct .breedName {
+    font-color: green;
+  }
+  .scoreARound .answer.wrong .svgSymbolCross {
+  }
+  .scoreARound .answer.wrong .breedName {
+    font-color: red;
+  }
 </style>

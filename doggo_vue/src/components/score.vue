@@ -8,7 +8,7 @@
 
       <div class="scoreBriefItm scoreBoard title">Your score</div>
       <svgScoreBoard />
-      <div class="scoreBriefItm scoreBoard data">78%</div>
+      <div class="scoreBriefItm scoreBoard data">{{ score }}%</div>
 
       <div class="scoreBriefItm clock title">Time used</div>
       <svgClock />
@@ -20,6 +20,7 @@
     </div>
     <scoreGModeGuessTheBreed
       v-for="(roundHist, idx) in gameHist.roundHist"
+      v-bind:key="idx"
       v-bind:roundHist="roundHist"
       v-bind:idx="idx"
     />
@@ -57,7 +58,7 @@ export default {
        *
        * .Depends.
        * =========
-       * .this.gameHist.
+       * .this.gameHist.gameMode.
        * ========= */
 
       switch (this.gameHist.gameMode) {
@@ -70,6 +71,31 @@ export default {
         default:
           return "Unknown";
       }
+    },
+    score () {
+      /* .Calculate the score in real time, by iterate through { gameHist }
+       * everytime { gameHist } has changed.
+       *
+       * .Depends.
+       * =========
+       * .this.gameHist.roundHist.
+       * ========= */
+
+      var roundHistLen = this.gameHist.roundHist.length;
+      var correctAnswerCount = 0;
+      if (roundHistLen === 0) {
+        /* .This block only happens for, when a new game just stated, the round 1
+         * is not even finished, there will be no score yet. */
+        return 0;
+      }
+      for (let x of this.gameHist.roundHist) {
+        if (x.answer.ifChosenAnswerCorrect === true) {
+          correctAnswerCount++;
+        } else {
+          // .Do nothing.
+        }
+      }
+      return parseInt((correctAnswerCount / roundHistLen) * 100, 10);
     }
   }
 }

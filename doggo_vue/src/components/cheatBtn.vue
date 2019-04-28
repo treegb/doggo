@@ -63,8 +63,9 @@ button {
   border: calc(0.0625em * 1) solid var(--greyClorMain2);
   /*background-color: var(--clorMain1);*/
   color: var(--greyClorMain2);
-  padding: 0.1em 5em;
+  padding: 0.4em 5em;
   font-family: inherit;
+  border-radius: 0.3em;
 }
 button .fontSize {
   font-size: 1.2em;

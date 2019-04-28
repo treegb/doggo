@@ -202,6 +202,8 @@ export default {
     line-height: 1.7rem;
     font-size: 0.8em;
     /* ============================================================================= */
+
+    transition: line-height 0.3s;
   }
   .allGameModes .gameMode.selected .innerWrapper {
     /* .Should sync with comment id 190425m160720. */

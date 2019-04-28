@@ -40,9 +40,6 @@ to prevent conflict with html standard { header } tag. -->
 <script>
 export default {
   name: 'headerr',
-  //props: {
-  //  msg: String
-  //}
   methods: {
     toggleNav (crrNav) {
       // .This method ((in this component)) will { emit } some data to parent component.

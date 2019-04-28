@@ -7,9 +7,14 @@
     <guessTheBreed
       v-else-if="state === 'guessTheBreed'"
       v-bind:gameHist="gameHist"
+      v-on:ifGameCompleted="ifGameCompleted"
     />
     <findTheOddOne
       v-else-if="state === 'findTheOddOne'"
+    />
+    <gameCompletedScene
+      v-else-if="state === 'gameCompletedScene'"
+      v-on:checkYourScore="checkYourScore"
     />
   </div>
 </template>
@@ -18,15 +23,18 @@
 import chooseGameMode from './chooseGameMode.vue';
 import guessTheBreed from './guessTheBreed.vue';
 import findTheOddOne from './findTheOddOne.vue';
+import gameCompletedScene from './gameCompletedScene.vue';
 export default {
   name: 'game',
   components: {
     chooseGameMode,
     guessTheBreed,
-    findTheOddOne
+    findTheOddOne,
+    gameCompletedScene,
   },
   props: [
     "gameHist",
+    "crrNav",
   ],
   data () {
     return {
@@ -37,6 +45,16 @@ export default {
     };
   },
   methods: {
+    checkYourScore () {
+      /* .When in "game completed scene", user click the button "Check your score".
+       *
+       * .Results.
+       * ==========
+       * .this.crrNav.
+       * ========== */
+       this.crrNav = "navScore";
+       console.log("Why I don't jump to Socore tab, even this state is changed?");
+    },
     chooseGameMode (gameMode) {
       /* .Executed AFTER chose a game mode.
        *
@@ -48,6 +66,17 @@ export default {
 
       this.resetGameHist(gameMode);
       this.state = gameMode;
+    },
+    ifGameCompleted () {
+      /* .If any game mode that is completed (but still not ended), then go to
+       * "game completed scene".
+       *
+       * .Depends.
+       * ==========
+       * .this.state.
+       * ========== */
+
+      this.state = "gameCompletedScene";
     },
     resetGameHist (gameMode) {
       /* .Reset the { gameHist } (game history).

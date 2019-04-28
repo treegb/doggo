@@ -1,9 +1,10 @@
 <template>
   <div id="guessTheBreed">
     <main
-      v-bind:class="cssClass.cssClassTransitionSpecific"
-      v-bind:style="cssClassRoundTransitionStateStateTransition"
+      v-bind:class="domClass.roundsScene"
+      v-bind:style="roundsSceneTransitionStateStateTransition"
     >
+      <h2>Round {{ roundCount + 1 }}/{{ roundCountTotalMax }}</h2>
       <breedImage v-bind:imgSrc="crrRound.question.imgSrc" />
       <div class="answerBtnCtn">
         <answerBtn88breed
@@ -77,6 +78,10 @@ export default {
   ],
   data () {
     return {
+      animationTime: {
+        roundTransition: 1100,
+        timeDelayAfterAnwerChosen: 1700
+      },
       answerOptionsAmount: 4,
       // .The more the player use { cheat }, the more answer options increase.
       answerOptionsAmountDefault: 4,
@@ -89,6 +94,15 @@ export default {
        * So this parameter basically stops more { cheat } to be used, when there is only
        * { answerOptionsAvailableAmountMin } amount of clickable (available)
        * answer button left. */
+      breedList: {},
+      // .A complete breed list.
+      cheatBtnState: {
+        btnVisualState: "neutral",
+        btnClickableState: true,
+      },
+      cheatStock: 0,
+      /* .The punishment accumulation, start from 0 and it means no punishment
+       * for next round), 1 means add one more answer option for next round ... . */
       crrRound: null,
       /* .The lifetime of { crrRound } only spans within exactly a round.
        * Any elements inside this [ property ]-[ object ] will not stay longer than
@@ -128,40 +142,32 @@ export default {
            * (but duplicate) data. So the calculation (statistic) wll be faster. */
         },
       },
-      breedList: {},
-      // .A complete breed list.
-      cheatBtnState: {
-        btnVisualState: "neutral",
-        btnClickableState: true,
-      },
-      cheatStock: 0,
-      /* .The punishment accumulation, start from 0 and it means no punishment
-       * for next round), 1 means add one more answer option for next round ... . */
-      cssClass: {
-        cssClassTransitionSpecific: [
-          "roundTransitionStateStateNormal",
-          "roundTransitionStateStateTransition"
-        ]
-        /* .So the { cssClassTransitionSpecific }
-         * can hold several css class name, but it will only contain
-         * { .roundTransitionStateStateNormal } and { .roundTransitionStateStateTransition }
-         * most of the time.
-         * .When we try to remove or add the css class { .roundTransitionStateStateTransition }
-         * inside { cssClassTransitionSpecific },
+      domClass: {
+        roundsScene: [
+          "roundsScene",
+          "roundsSceneTransitionStateStateNormal",
+          "roundsSceneTransitionStateStateTransition",
+        ],
+        /* .When we try to remove or add the css class
+         * { .roundsSceneTransitionStateStateTransition }
+         * inside { roundsScene },
          * the transition start to works, otherwise, nothing will happens.
          * .Notice, not all css style logic can be apply by applying this class on
          * those elements which need transition animation, because some css style
          * need javascript data (variable time), so it can only be done by
          * { computed style } at this moment. */
       },
-      animationTime: {
-        roundTransition: 1100,
-        timeDelayAfterAnwerChosen: 1700
-      }
+      roundCount: -1,
+      /* . If 0 means round 1, 1 means round 2 ... .
+       * .I use "-1" here instead of "0", because when in the beginning of
+       * the first round, { setANewRound() } be executed, and it increase 1 immediately. */
+      roundCountTotalMax: 1,
+      /* .How many rounds it takes in this game mode.
+       * .If 1 means there will be only 1 round, 2 means there will be only 2 rounds ... . */
     };
   },
   computed: {
-    cssClassRoundTransitionStateStateTransition() {
+    roundsSceneTransitionStateStateTransition() {
       return {
         transition: `opacity ${(this.animationTime.roundTransition - 100) / 1000}s`
       };
@@ -566,16 +572,33 @@ export default {
        *
        * .Depends.
        * ==========
-       * .this.animationTime.timeDelayAfterAnwerChosen();
+       * .this.animationTime.timeDelayAfterAnwerChosen().
+       * .this.modifyDomClassAddRoundTransitionState().
+       * .this.roundCount.
+       * .this.roundCountTotalMax.
        * .this.setANewRound();
+       * .this.gameCompleted().
        * .this.updateGameHistRoundHist().
        * ========== */
 
        this.updateGameHistRoundHist();
-       setTimeout(() => {
-         this.setANewRound();
-       }, this.animationTime.timeDelayAfterAnwerChosen);
-       // .Todo: Not safe enough! Should bind { this } keword inside { setTimeout }!
+       setTimeout(function () {
+         if (this.roundCount < this.roundCountTotalMax - 1) {
+           //this.roundCount++;
+           /* .Don't increase roundCount here, because the effect will
+           * be too early to shown, before transition end. */
+           this.setANewRound();
+         } else {
+           this.modifyDomClassAddRoundTransitionState();
+           /* .Ending animation of first { <main> }.
+            * .But { this.modifyDomClassRemoveRoundTransitionState() } Will
+            * not be executed, it don't have to, because the first { <main> }
+            * is disappeared now. */
+           setTimeout(function () {
+             this.gameCompleted();
+           }.bind(this), this.animationTime.roundTransition);
+         }
+       }.bind(this), this.animationTime.timeDelayAfterAnwerChosen);
     },
     fullBreedId (mainBreed, subBreed) {
       // .If { mainBreed } = "retriever", { subBreed } "golden", return "retrieverGolden".
@@ -641,36 +664,36 @@ export default {
        * those are not related to { score } component at all. */
       this.gameHist.roundHist.push(rsltRoundHist);
     },
-    modifyCssClassAddRoundTransitionState () {
-      /* .Modify css class inside property { cssClassTransitionSpecific }.
-       * .Add css class { .roundTransitionStateStateTransition } if it didn't exists inside.
+    modifyDomClassAddRoundTransitionState () {
+      /* .Modify css class inside property { roundsScene }.
+       * .Add css class { .roundsSceneTransitionStateStateTransition } if it didn't exists inside.
        *
        * .Results.
        * ==========
-       * .this.cssClass.
+       * .this.domClass.
        * ========== */
 
       if (
-        ! this.cssClass.cssClassTransitionSpecific
-        .includes("roundTransitionStateStateTransition")
+        ! this.domClass.roundsScene
+        .includes("roundsSceneTransitionStateStateTransition")
       ) {
-        this.cssClass.cssClassTransitionSpecific.push("roundTransitionStateStateTransition");
+        this.domClass.roundsScene.push("roundsSceneTransitionStateStateTransition");
       }
     },
-    modifyCssClassRemoveRoundTransitionState () {
-      /* .Modify css class inside property { cssClassTransitionSpecific }.
-       * .Remove css class { .roundTransitionStateStateTransition } if it didn't exists inside.
+    modifyDomClassRemoveRoundTransitionState () {
+      /* .Modify css class inside property { roundsScene }.
+       * .Remove css class { .roundsSceneTransitionStateStateTransition } if it didn't exists inside.
        *
        * .Results.
        * ==========
-       * .this.cssClass.
+       * .this.domClass.
        * ========== */
 
       if (
-        this.cssClass.cssClassTransitionSpecific
-        .includes("roundTransitionStateStateTransition")
+        this.domClass.roundsScene
+        .includes("roundsSceneTransitionStateStateTransition")
       ) {
-        this.cssClass.cssClassTransitionSpecific.splice(this.cssClass.cssClassTransitionSpecific.indexOf("roundTransitionStateStateTransition"), 1);
+        this.domClass.roundsScene.splice(this.domClass.roundsScene.indexOf("roundsSceneTransitionStateStateTransition"), 1);
       }
     },
     prepareDataForNewRound() {
@@ -688,9 +711,11 @@ export default {
        * .Results.
        * =========
        * .this.cheatBtnState.
+       * .this.roundCount.
        * ========= */
 
       this.calculateAswOptAmt();
+      this.roundCount++;
       this.cheatBtnState.btnVisualState = "neutral";
       this.cheatBtnState.btnClickableState = true;
     },
@@ -759,14 +784,14 @@ export default {
        * ==========
        * .this.breedList.
        * .this.animationTime.roundTransition.
-       * .this.modifyCssClassAddRoundTransitionState().
+       * .this.modifyDomClassAddRoundTransitionState().
        * .this.prepareDataForNewRound().
        * .this.resetCrrRound().
        * .this.setQuestionRandomBreed().
        * .this.setQuestionImageByBreed().
        * ========== */
 
-      this.modifyCssClassAddRoundTransitionState();
+      this.modifyDomClassAddRoundTransitionState();
       setTimeout(
         (function () {
 
@@ -782,7 +807,7 @@ export default {
             this.setQuestionRandomBreed(this.breedList);
             this.setQuestionImageByBreed();
             // . Notice this line is async.
-            this.modifyCssClassRemoveRoundTransitionState();
+            this.modifyDomClassRemoveRoundTransitionState();
             this.setAnswerRandomBreed(this.breedList);
           };
           // =============================================================
@@ -1002,7 +1027,13 @@ export default {
       this.crrRound.question.subBreed = randomBreed.subBreed;
       this.crrRound.question.fullBreed = this.fullBreedId(randomBreed.mainBreed, randomBreed.subBreed);
       this.crrRound.question.fullBreedName = this.fullBreedName(randomBreed.mainBreed, randomBreed.subBreed);
-    }
+    },
+    gameCompleted() {
+      /* ."Game completed scene" only shown when all the round is finished,
+       * but the game is not end yet (score data is not yet removed). */
+
+      this.$emit("ifGameCompleted");
+    },
   },
   watch: {
   }
@@ -1011,15 +1042,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-main {
+main.roundsScene {
   display: grid;
   grid-template-columns: 3fr minmax(max-content, 2fr);
   grid-template-areas:
+    "heading heading"
     "breedImage answerBtnCtn"
     "cheatBtn cheatBtn";
   grid-gap: 2em;
   margin: 0 0.5em;
   padding: 0;
+}
+h2 {
+  grid-area: heading;
+  justify-self: center;
 }
 .breedImage {
   grid-area: breedImage;
@@ -1045,10 +1081,12 @@ main {
   margin-right: 1em;
   justify-self: center;
 }
-.roundTransitionStateStateNormal {
+.roundsSceneTransitionStateStateNormal {
+  /* .Related to element { .roundsScene }. */
   opacity: 1;
 }
-.roundTransitionStateStateNormal.roundTransitionStateStateTransition {
+.roundsSceneTransitionStateStateNormal.roundsSceneTransitionStateStateTransition {
+  /* .Related to element { .roundsScene }. */
   opacity: 0;
 }
 </style>

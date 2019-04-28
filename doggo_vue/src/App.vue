@@ -6,6 +6,7 @@
     />
     <game
       v-show="crrNav === 'navGame'"
+      v-bind:crrNav="crrNav"
       v-bind:gameHist="gameHist"
     />
     <rules v-show="crrNav === 'navRules'" />
@@ -22,6 +23,17 @@ import game from './components/game.vue'
 import rules from './components/rules.vue'
 import score from './components/score.vue'
 import headerr from './components/headerr.vue'
+
+
+Todo: fix places mutating props, including:
+game ,, gameHist
+game ,, navScore
+guessTheBreed ,, gameHist
+明天來寫一個 vue 測試，來做一個雙向綁定，這樣做: parent 傳 props foo (foo = 0) 給 child, 然後 child 再 emit foo++ 回去給 parent, 然後 parent 再 update 原本的 foo = foo++，這樣看會不會變無窮迴圈。
+
+
+
+
 
 export default {
   name: 'App',
@@ -105,5 +117,15 @@ footer {
 }
 footer > * {
   font-size: 0.87em;
+}
+button {
+  border: calc(0.0625em * 1) solid var(--greyClorMain2);
+  /*background-color: var(--clorMain1);*/
+  color: var(--greyClorMain2);
+  background-color: var(--clorMain1);
+  padding: 0.4em 1.4em;
+  min-width: 10em;
+  font-family: inherit;
+  border-radius: 0.3em;
 }
 </style>
