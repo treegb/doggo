@@ -1,3 +1,10 @@
+<!--
+  .Planning:
+  ..Do CSS and media query for mobile screen.
+  ..Write { rules } tab.
+  ..Deploy.
+  ..Write another game mode.
+-->
 <template>
   <div id="app">
     <headerr
@@ -7,7 +14,9 @@
     <game
       v-show="crrNav === 'navGame'"
       v-bind:crrNav="crrNav"
-      v-bind:gameHist="gameHist"
+      v-bind:gameHistProps="gameHist"
+      v-on:gameHistEmitThrow="gameHistEmitCatch"
+      v-on:crrNavEmitThrow="crrNavEmitCatch"
     />
     <rules v-show="crrNav === 'navRules'" />
     <score
@@ -24,16 +33,12 @@ import rules from './components/rules.vue'
 import score from './components/score.vue'
 import headerr from './components/headerr.vue'
 
-
-Todo: fix places mutating props, including:
-game ,, gameHist
-game ,, navScore
-guessTheBreed ,, gameHist
-明天來寫一個 vue 測試，來做一個雙向綁定，這樣做: parent 傳 props foo (foo = 0) 給 child, 然後 child 再 emit foo++ 回去給 parent, 然後 parent 再 update 原本的 foo = foo++，這樣看會不會變無窮迴圈。
-
-
-
-
+// .Loading jquery (locally, only works for this component) by following this method:
+// https://medium.com/code4mk-org/how-to-use-jquery-inside-vue-add-other-js-library-inside-vue-9eea8fbd0416
+// =====================================================================================
+import jquery from 'jquery';
+let $ = jquery;
+// =====================================================================================
 
 export default {
   name: 'App',
@@ -49,7 +54,8 @@ export default {
       gameHist: {
         cheatCount: 0,
         gameMode: null,
-        timeUsed: null,
+        gameTime: null,
+        // .About data structure, see { game } component.
         roundHist: [],
       },
     };
@@ -62,9 +68,37 @@ export default {
     console.debug(".In { apps.vue }.");
   },
   methods: {
+    crrNavEmitCatch (crrNav) {
+      /* .Results.
+       * =========
+       * .this.crrNav.
+       * ========= */
+
+      this.crrNav = crrNav;
+    },
+    gameHistEmitCatch (gameHist) {
+      /* .Results.
+       * =========
+       * .this.gameHist.
+       * ========= */
+
+      /* .Pass by reference: I think pass by reference is ok, since we will
+       * using this data read-only, not going to mutating them.
+       * .I don't think beside { game } component, anyone will modifiy this piece
+       * of data, so it is not necessary to clone again.
+       * =================================================================== */
+      this.gameHist = gameHist;
+      // this.gameHist = $.extend(true, {}, gameHist);
+      /* =================================================================== */
+    },
     toggleNav (crrNavEmitted) {
+      /* .Depends.
+       * =========
+       * .this.crrNav.
+       * ========= */
+
       this.crrNav = crrNavEmitted;
-    }
+    },
   }
 }
 </script>

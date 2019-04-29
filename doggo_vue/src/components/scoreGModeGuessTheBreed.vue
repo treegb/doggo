@@ -58,7 +58,6 @@ export default {
           this.roundHist.answer.ifChosenAnswerCorrect === true &&
           crrAnswer.ifUserChooseThisAsw  === true
         ) {
-          // .Todo: Check the data structure around ???, to see this logic have no bug.
           return crrAnswer.fullBreedName;
         } else if (this.roundHist.answer.ifChosenAnswerCorrect === false) {
           return this.roundHist.question.fullBreedName;

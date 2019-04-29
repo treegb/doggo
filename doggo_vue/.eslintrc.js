@@ -12,11 +12,14 @@ module.exports = {
       'no-console': 'off',
       /* .Pin down those warning when using { console.log() } related function. See:
        * https://stackoverflow.com/questions/34215526/eslint-how-to-disable-unexpected-console-statement-in-node-js#34215651. */
-
       'vue/html-indent': 'off',
       /* .It is bad idea to not to follow corrrect indentation, but sometimes is is necessary to use "incorrect" indentation
        * for example when you embed svg code inside html document, those svg are not organized by svg editor, and you don't
        * want to waste time to make it indent beautifully. */
+      'vue/html-self-closing': 'off',
+      /* .In Vue.js template, we can use either two styles for elements which don't have their content:
+       * ..<YourComponent></YourComponent>
+       * ..<YourComponent/> (self-closing). */
       'vue/max-attributes-per-line': 'off',
       /* .If not set to off, any html element ,, attributes, have some special rules about how much attributes
        * you can put in same line (in this html element opening tag). */

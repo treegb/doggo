@@ -6,7 +6,7 @@
     <h2>Game finished!</h2>
     <div class="options">
       <button v-on:click="checkYourScore">Check your score!</button>
-      <button>Start a new game</button>
+      <button v-on:click="startNewGame">Start a new game</button>
     </div>
   </main>
 </template>
@@ -55,6 +55,9 @@ export default {
     checkYourScore () {
       this.$emit("checkYourScore");
     },
+    startNewGame () {
+      this.$emit("startNewGame");
+    }
   },
   computed: {
     gameCompletedSceneTransition() {

@@ -46,11 +46,13 @@ export default {
   created () {
     /* .Depends.
      * ==========
+     * .this.initialGameHist().
      * .this.resetCrrRound().
      * .this.setBreedList().
      * .this.setANewRound().
      * ========== */
 
+    this.initialGameHist();
     this.resetCrrRound();
     /* .See comment id 190421m190940, to see why I don't just use { setANewRound() }
      * to invoke this method. */
@@ -74,7 +76,7 @@ export default {
     // ==================================================================
   },
   props: [
-    "gameHist",
+    "gameHistProps",
   ],
   data () {
     return {
@@ -157,11 +159,15 @@ export default {
          * need javascript data (variable time), so it can only be done by
          * { computed style } at this moment. */
       },
+      gameHist: null,
+      /* .cloning { gameHistProps } when the initializing this
+       * [ component ]**[ game mode ].
+       * .See comment id 190429m080452. */
       roundCount: -1,
       /* . If 0 means round 1, 1 means round 2 ... .
        * .I use "-1" here instead of "0", because when in the beginning of
        * the first round, { setANewRound() } be executed, and it increase 1 immediately. */
-      roundCountTotalMax: 1,
+      roundCountTotalMax: 12,
       /* .How many rounds it takes in this game mode.
        * .If 1 means there will be only 1 round, 2 means there will be only 2 rounds ... . */
     };
@@ -175,7 +181,8 @@ export default {
   },
   methods: {
     answerHandler88model (argg) {
-      /* .{ Model } function to handle answer buttons and cheat button
+      /* .Bad function structure, should refactor and breaks this func to smaller pieces.
+       * .{ Model } function to handle answer buttons and cheat button
        * when they are clicked.
        * .Argument ,, argg ,, stands for: "Mixed OPTionS".
        * .Argument ,, argg ,, data structure (example):
@@ -196,6 +203,7 @@ export default {
        * .this.checkAswBtnClickableState().
        * .this.createAnEmptySubObjForThisObjWithPptNameIfNotExists().
        * .this.finishCrrRound().
+       * .this.gameHistEmitThrow().
        * .this.randomIntegerFromRange().
        * ==========
        *
@@ -266,6 +274,8 @@ export default {
         // .Invoke { view } to update the view.
         this.cheatBtn88view({btnClickableState: false});
         // .Invoke { view } to update the view.
+        this.gameHistEmitThrow();
+        // .This have to put before  { finishCrrRound() } otherwise it don't get executed.
         this.finishCrrRound();
       }
       // .For answer buttons.
@@ -333,6 +343,7 @@ export default {
            * sync between { game }, { score } component. 2. The data inside { gameHist }
            * can be modify in lots of "places", it's loose and sloppy, but it is
            * more convenient and simple when application is small. */
+          this.gameHistEmitThrow();
         }
       }
       // .For cheat button.
@@ -627,42 +638,42 @@ export default {
       }
       return rslt;
     },
-    updateGameHistRoundHist() {
-      /* .Clone { crrRound }, to the last (new) element of { gameHist.roundHist }.
-       * .Notice, this clone will be pass by value, not pass by reference,
-       * to prevent unexpected behave.
+    gameCompleted () {
+      /* ."Game completed scene" only shown when all the round is finished,
+       * but the game is not end yet (score data is not yet removed). */
+
+      this.$emit("ifGameCompleted");
+    },
+    gameHistEmitThrow () {
+      /* .Emit { gameHist} back to parent { gameHistProps }, when some "process intense"
+       * job is done, so { gmaeHist } in { Apps } component will be sync with
+       * any action } doing here.
+       * .See comment id 190429m080452.
        *
        * .Depends.
        * ==========
-       * .jquery.
-       * .this.crrRound.
+       * .this.gameHist.
+       * ========== */
+
+      this.$emit("gameHistEmitThrow", this.gameHist);
+    },
+    initialGameHist () {
+      /* .cloning { gameHistProps } when the initializing this
+       * [ component ]**[ game mode ].
+       * .See comment id 190429m080452.
+       *
+       * .Depends.
+       * ==========
+       * .this.gameHistProps.
        * ==========
        *
        * .Results.
        * ==========
-       * .this.gameHist.roundHist.
+       * .this.gameHist.
        * ========== */
 
-      var rsltRoundHist = {};
-      //... (Main logic, multiple lines, to decide what property should be update to there) ...
-      rsltRoundHist.question = $.extend(true, {}, this.crrRound.question);
-      rsltRoundHist.answer = {
-        breeds: [],
-        ifChosenAnswerCorrect: this.ifChosenAnswerCorrect,
-      };
-      rsltRoundHist.answer.breeds = this.crrRound.answer.breeds.map((elm) => {
-        var rslt = {
-          mainBreed: elm.mainBreed,
-          subBreed: elm.subBreed,
-          fullBreed: elm.fullBreed,
-          fullBreedName: elm.fullBreedName,
-          ifUserChooseThisAsw: elm.ifUserChooseThisAsw,
-        };
-        return rslt;
-      });
-      /* ."Filter" out useless data, like { btnVisualState }, { btnClickableState },
-       * those are not related to { score } component at all. */
-      this.gameHist.roundHist.push(rsltRoundHist);
+      this.gameHist = $.extend(true, {}, this.gameHistProps);
+      /* .Use clone here instead of copy, because I don't want to "pass by reference". */
     },
     modifyDomClassAddRoundTransitionState () {
       /* .Modify css class inside property { roundsScene }.
@@ -1028,11 +1039,46 @@ export default {
       this.crrRound.question.fullBreed = this.fullBreedId(randomBreed.mainBreed, randomBreed.subBreed);
       this.crrRound.question.fullBreedName = this.fullBreedName(randomBreed.mainBreed, randomBreed.subBreed);
     },
-    gameCompleted() {
-      /* ."Game completed scene" only shown when all the round is finished,
-       * but the game is not end yet (score data is not yet removed). */
+    updateGameHistRoundHist() {
+      /* .Clone { crrRound }, to the last (new) element of { gameHist.roundHist }.
+       * .Notice, this clone will be pass by value, not pass by reference,
+       * to prevent unexpected behave.
+       *
+       * .Depends.
+       * ==========
+       * .jquery.
+       * .this.crrRound.
+       * .this.gameHistEmitThrow().
+       * ==========
+       *
+       * .Results.
+       * ==========
+       * .this.gameHist.roundHist.
+       * ========== */
 
-      this.$emit("ifGameCompleted");
+      var rsltRoundHist = {};
+      //... (Main logic, multiple lines, to decide what property should be update to there) ...
+      rsltRoundHist.question = $.extend(true, {}, this.crrRound.question);
+      rsltRoundHist.answer = {
+        breeds: [],
+        ifChosenAnswerCorrect: this.ifChosenAnswerCorrect,
+      };
+      rsltRoundHist.answer.breeds = this.crrRound.answer.breeds.map((elm) => {
+        var rslt = {
+          mainBreed: elm.mainBreed,
+          subBreed: elm.subBreed,
+          fullBreed: elm.fullBreed,
+          fullBreedName: elm.fullBreedName,
+          ifUserChooseThisAsw: elm.ifUserChooseThisAsw,
+        };
+        return rslt;
+      });
+      /* ."Filter" out useless data, like { btnVisualState }, { btnClickableState },
+       * those are not related to { score } component at all. */
+      this.gameHist.roundHist.push(rsltRoundHist);
+      this.gameHistEmitThrow();
+      // .So not only { this.gameHist } need to be update, the parent component
+      // ,, { gameHist } also need to be update.
     },
   },
   watch: {

@@ -13,7 +13,8 @@ to prevent conflict with html standard { header } tag. -->
             v-on:click="toggleNav('navGame')"
           >
             <p class="navTitle">Game</p>
-            <div class="decorationDot"></div>
+            <div class="decorationDot"
+            ></div>
           </li>
           <li
             class="navRules"
@@ -21,7 +22,8 @@ to prevent conflict with html standard { header } tag. -->
             v-on:click="toggleNav('navRules')"
           >
             <p class="navTitle">Rules</p>
-            <div class="decorationDot"></div>
+            <div class="decorationDot"
+            ></div>
           </li>
           <li
             class="navScore"
@@ -29,7 +31,8 @@ to prevent conflict with html standard { header } tag. -->
             v-on:click="toggleNav('navScore')"
           >
             <p class="navTitle">Score</p>
-            <div class="decorationDot"></div>
+            <div class="decorationDot"
+            ></div>
           </li>
         </ul>
       </nav>

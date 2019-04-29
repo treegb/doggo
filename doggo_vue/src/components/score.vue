@@ -12,7 +12,7 @@
 
       <div class="scoreBriefItm clock title">Time used</div>
       <svgClock />
-      <div class="scoreBriefItm clock data">12:34</div>
+      <div class="scoreBriefItm clock data">{{ gameTime }}</div>
 
       <div class="scoreBriefItm cheat title">Cheat used</div>
       <svgCheat />
@@ -51,6 +51,14 @@ export default {
     };
   },
   methods: {
+    padBefore (n, width, z) {
+      /* .Add some padding characters before given string,
+       * to make it "long enough to fit" the specific size.
+       * For example, before - 63, after - 00063. */
+      z = z || '0';
+      n = n + '';
+      return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+    },
   },
   computed: {
     gameModeHumanReadable () {
@@ -96,7 +104,24 @@ export default {
         }
       }
       return parseInt((correctAnswerCount / roundHistLen) * 100, 10);
-    }
+    },
+    gameTime () {
+      /* .Depends.
+       * =========
+       * .this.gameHist.gameTime.gameTimeLapseSecond.
+       * .this.padBefore().
+       * ========= */
+
+      var prntMin = 0;
+      var prntSec = 0;
+      var gameTimeLapseSecond;
+      if (this.gameHist.gameTime !== null) {
+        gameTimeLapseSecond = this.gameHist.gameTime.gameTimeLapseSecond;
+        prntMin = Math.floor(gameTimeLapseSecond / 60);
+        prntSec = Math.floor(gameTimeLapseSecond % 60);
+      }
+      return this.padBefore(prntMin, 2) + ':' + this.padBefore(prntSec, 2);
+    },
   }
 }
 </script>
