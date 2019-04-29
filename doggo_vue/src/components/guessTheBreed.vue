@@ -1096,8 +1096,6 @@ main.roundsScene {
     "breedImage answerBtnCtn"
     "cheatBtn cheatBtn";
   grid-gap: 2em;
-  margin: 0 0.5em;
-  padding: 0;
 }
 h2 {
   grid-area: heading;

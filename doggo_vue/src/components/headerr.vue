@@ -17,11 +17,11 @@ to prevent conflict with html standard { header } tag. -->
             ></div>
           </li>
           <li
-            class="navRules"
-            v-bind:class="{'crrNav': crrNav === 'navRules'}"
-            v-on:click="toggleNav('navRules')"
+            class="navHelp"
+            v-bind:class="{'crrNav': crrNav === 'navHelp'}"
+            v-on:click="toggleNav('navHelp')"
           >
-            <p class="navTitle">Rules</p>
+            <p class="navTitle">Help</p>
             <div class="decorationDot"
             ></div>
           </li>

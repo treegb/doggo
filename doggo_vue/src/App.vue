@@ -1,9 +1,8 @@
 <!--
   .Planning:
   ..Do CSS and media query for mobile screen.
-  ..Write { rules } tab.
   ..Deploy.
-  ..Write another game mode.
+  ..Finish another game mode.
 -->
 <template>
   <div id="app">
@@ -18,18 +17,18 @@
       v-on:gameHistEmitThrow="gameHistEmitCatch"
       v-on:crrNavEmitThrow="crrNavEmitCatch"
     />
-    <rules v-show="crrNav === 'navRules'" />
+    <help v-show="crrNav === 'navHelp'" />
     <score
       v-show="crrNav === 'navScore'"
       v-bind:gameHist="gameHist"
       />
-    <footer><p>Build with Vue.js</p></footer>
+    <footer><p>Build with Vue.js, by treegb</p></footer>
   </div>
 </template>
 
 <script>
 import game from './components/game.vue'
-import rules from './components/rules.vue'
+import help from './components/help.vue'
 import score from './components/score.vue'
 import headerr from './components/headerr.vue'
 
@@ -44,7 +43,7 @@ export default {
   name: 'App',
   components: {
     game,
-    rules,
+    help,
     score,
     headerr,
   },
@@ -130,6 +129,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: "helvetica", sans-serif;
+  color: var(--greyClorMain1);
 }
 h2 {
   color: var(--greyClorMain2);
@@ -161,5 +161,11 @@ button {
   min-width: 10em;
   font-family: inherit;
   border-radius: 0.3em;
+}
+a {
+  color: var(--clorMain1);
+}
+p {
+  line-height: 200%;
 }
 </style>

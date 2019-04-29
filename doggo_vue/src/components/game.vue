@@ -12,6 +12,8 @@
     />
     <findTheOddOne
       v-else-if="state === 'findTheOddOne'"
+      v-bind:gameHistProps="gameHist"
+      v-on:startNewGame="startNewGame"
     />
     <gameCompletedScene
       v-else-if="state === 'gameCompletedScene'"
@@ -237,4 +239,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+>>> main {
+  /* .Here I use  { deep selector }. See:
+   * https://github.com/vuejs/vuejs.org/issues/1150 . */
+  margin: 0 0.5em;
+  padding: 0;
+}
 </style>
