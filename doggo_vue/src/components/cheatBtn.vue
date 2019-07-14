@@ -3,7 +3,7 @@
     class="cheatBtn"
     v-bind:style="{'background-color': btnBackgroundColor}"
     v-on:click="cheatBtnOnClick"
-  ><span class="fontSize">Cheat <span class="italic">!</span></span></button>
+  ><i>Cheat <span class="italic">!</span></i></button>
 </template>
 
 <script>
@@ -63,12 +63,13 @@ button {
   border: calc(0.0625em * 1) solid var(--greyClorMain2);
   /*background-color: var(--clorMain1);*/
   color: var(--greyClorMain2);
-  padding: 0.4em 5em;
+  padding: 0.4em 1.5em;
   font-family: inherit;
   border-radius: 0.3em;
 }
-button .fontSize {
+button i {
   font-size: 1.2em;
+  letter-spacing: 0.5em;
 }
 button .italic {
   font-style: italic;

@@ -1,0 +1,173 @@
+// .Global config/style.
+@import './baseVar.scss';
+
+$navMobileLogic_visibleButton_width: 2.1em;
+$navMobileLogic_visibleButton_height: 1.9em;
+$navMobileLogic_visibleButton_color: $clorGreyBright;
+$navMobileLogic_theThickLine_widthMinus: 0.5em;
+$navMobileLogic_theThickLine_height: 2px;
+$navMobileLogic_theThickLine_splitLength: 0.4em;
+$navMobileLogic_theThickLine_color: $clorGreyDark;
+
+// .In same depth (rough).
+// -----------------------
+header {
+  & input#headerMenuInput {
+    display: none;
+  }
+  & .visibleButton {
+    display: none;
+    // .Will be toggled while in mobile screen.
+    position: relative;
+    width: $navMobileLogic_visibleButton_width;
+    height: $navMobileLogic_visibleButton_height;
+    border-radius: calc(0.0625em * 5);
+    border: 1px solid $navMobileLogic_visibleButton_color;
+    background-color: white;
+
+    & .theThickLine,
+    & .theThickLine:before,
+    & .theThickLine:after {
+      position: absolute;
+      border-radius: calc(#{$navMobileLogic_theThickLine_height} / 2);
+      // .I can't use "50%" because it will work differently for horizontal side and vertical side.
+      background-color: $navMobileLogic_theThickLine_color;
+    }
+    & .theThickLine {
+      top: calc((#{$navMobileLogic_visibleButton_height} - #{$navMobileLogic_theThickLine_height}) / 2);
+      left: $navMobileLogic_theThickLine_widthMinus;
+      right: $navMobileLogic_theThickLine_widthMinus;
+      bottom: calc((#{$navMobileLogic_visibleButton_height} - #{$navMobileLogic_theThickLine_height}) / 2);
+    }
+    & .theThickLine:before,
+    & .theThickLine:after {
+      content: "";
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    & .theThickLine:before {
+      transform: translateY(calc(0em - #{$navMobileLogic_theThickLine_splitLength}));
+    }
+    & .theThickLine:after {
+      transform: translateY($navMobileLogic_theThickLine_splitLength);
+    }
+  }
+}
+
+@media screen and (max-width: $screenMdWidth) {
+  header {
+    & .logo {
+      margin-right: 0;
+      // .Overwrite.
+    }
+    & nav {
+      background-color: unset;
+      // .Overwrite.
+      padding-top: 0;
+      // .Overwrite.
+      padding-bottom: 0;
+      // .Overwrite.
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #4b4b4b;
+      transform: translateX(-105vw);
+      // .Why 105 instead of 100? Because the box-shadow still revealed.
+      transition: transform 0.5s;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.24);
+      z-index: 10;
+      // .Big enough to make it will certainly overlap everything else on the page,
+      // in any circumstance.
+    }
+    & #headerMenuInput:checked ~ nav {
+      transform: translateX(-5em);
+      // .Should sync with comment id 190701m174027.
+    }
+    & .visibleButton {
+      display: block;
+      position: fixed;
+      top: 0.4em;
+      right: 0.4em;
+    }
+    & ul {
+      // .Not required, just make it more safe.
+      // ========================================
+      display: flex;
+      margin: 0;
+      padding: 0;
+      justify-content: center;
+      align-items: center;
+      // ========================================
+      align-content: center;
+      width: 100%;
+      height: 100%;
+      flex-wrap: wrap;
+    }
+    & ul li {
+      margin-left: 0;
+      // .Overwrite.
+      flex-basis: 100%;
+      box-sizing: border-box;
+      // .Not required, just make it more safe.
+      display: flex;
+          justify-content: center;
+      align-items: center;
+      transform: translateX(calc(5em / 2));
+      // .Should sync with comment id 190701m174027.
+    }
+    & li .navTitle,
+    & li .decorationDot {
+    }
+    & li .navTitle {
+      order: 2;
+    }
+    & li.nav-item .navTitle {
+      // .Use { .nav-item } here to boost it's priority.
+      color: scale-color(
+        $clorPrimary,
+        $saturation: -100%,
+        $lightness: 35%,
+      );
+    }
+    & li .decorationDot {
+      order: 1;
+    }
+    & li div.decorationDot {
+      // .Use { div } here to boost it's priority.
+      margin: 0 1.3em 0 0;
+    }
+    & li:not(.crrNav) .decorationDot {
+      opacity: 0;
+    }
+    & li:not(.crrNav) div.decorationDot {
+      // .Use { div } here to boost it's priority.
+      width: 1px;
+      height: 1px;
+    }
+
+    & label .theThickLine,
+    & label .theThickLine:before,
+    & label .theThickLine:after {
+      transition: all 0.6s;
+    }
+    & #headerMenuInput:checked {
+      & ~ label .theThickLine {
+        background-color: unset;
+      }
+      & ~ label .theThickLine:before,
+      & ~ label .theThickLine:after {
+        transform: translateY(0);
+      }
+      & ~ label .theThickLine:before {
+        transform: rotate(-45deg);
+      }
+      & ~ label .theThickLine:after {
+        transform: rotate(45deg);
+      }
+    }
+  }
+}

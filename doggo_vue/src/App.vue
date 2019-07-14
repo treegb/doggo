@@ -17,7 +17,7 @@
       v-on:gameHistEmitThrow="gameHistEmitCatch"
       v-on:crrNavEmitThrow="crrNavEmitCatch"
     />
-    <help v-show="crrNav === 'navHelp'" />
+    <help v-show="crrNav === 'navHelp'" :ifPageIsFocused="crrNav === 'navHelp'"></help>
     <score
       v-show="crrNav === 'navScore'"
       v-bind:gameHist="gameHist"
@@ -102,70 +102,69 @@ export default {
 }
 </script>
 
-<style>
-:root {
-  --clorMain1: #17756A;
-  --clorMain1Shade1: #59A39A;
-  --clorMain1Shade2: #8dc9c2;
-  --clorOk: #177539;
-  --clorError: #757517;
-  --greyClorMain1: #777;
-  --greyClorMain2: #a3a3a3;
-  --greyClorMain3: #ccc;
-}
-@font-face {
-  /* .A standard, general purpose font. */
-  font-family: "helvetica";
-  src: url('./font/helvetica.woff')
-       format("woff");
-}
-@font-face {
-  /* .A more enthusiastic font. */
-  font-family: "aclonica";
-  src: url('./font/aclonica.ttf')
-       format("truetype");
-}
-body {
-  margin: 0;
-  padding: 0;
-  font-family: "helvetica", sans-serif;
-  color: var(--greyClorMain1);
-}
-h2 {
-  color: var(--greyClorMain2);
-  text-align: center;
-  font-size: 1.2rem;
-  letter-spacing: calc(0.0625rem * 2);
-  word-spacing: calc(0.0625rem * 7);
-  margin:2em auto;
-  font-weight: 900;
-}
-footer {
-  margin: 8em 0 0 0;
-  background-color: var(--clorMain1);
-  min-height: 3.4em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--greyClorMain1);
-}
-footer > * {
-  font-size: 0.87em;
-}
-button {
-  border: calc(0.0625em * 1) solid var(--greyClorMain2);
-  /*background-color: var(--clorMain1);*/
-  color: var(--greyClorMain2);
-  background-color: var(--clorMain1);
-  padding: 0.4em 1.4em;
-  min-width: 10em;
-  font-family: inherit;
-  border-radius: 0.3em;
-}
-a {
-  color: var(--clorMain1);
-}
-p {
-  line-height: 200%;
-}
+<style lang="scss">
+@import "@/style/base.scss";
+
+  :root {
+    --clorMain1: #{$clorPrimary};
+    --clorMain1Shade1: #59A39A;
+    --clorMain1Shade2: #8dc9c2;
+    --clorOk: #{$clorOk};
+    --clorError: #{$clorError};
+    --greyClorMain1: #{$clorGrey};
+    --greyClorMain2: #a3a3a3;
+    --greyClorMain3: #ccc;
+  }
+  //@font-face {
+  //  /* .A more enthusiastic font. */
+  //  font-family: "aclonica";
+  //  src: url('./font/aclonica.ttf')
+  //       format("truetype");
+  //}
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--greyClorMain1);
+  }
+  h2 {
+    color: var(--greyClorMain2);
+    text-align: center;
+    font-size: 1.2rem;
+    letter-spacing: calc(0.0625rem * 2);
+    word-spacing: calc(0.0625rem * 7);
+    margin:2em auto;
+    font-weight: 900;
+  }
+  footer {
+    margin: 8em 0 0 0;
+    background-color: var(--clorMain1);
+    min-height: 3.4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--greyClorMain1);
+  }
+  footer > * {
+    font-size: 0.87em;
+  }
+  button {
+    border: calc(0.0625em * 1) solid var(--greyClorMain2);
+    /*background-color: var(--clorMain1);*/
+    color: var(--greyClorMain2);
+    background-color: var(--clorMain1);
+    padding: 0.4em 1.4em;
+    min-width: 10em;
+    font-family: inherit;
+    border-radius: 0.3em;
+  }
+  a {
+    color: var(--clorMain1);
+  }
+  p {
+    line-height: 2;
+  }
+</style>
+
+<style scoped lang="scss">
 </style>

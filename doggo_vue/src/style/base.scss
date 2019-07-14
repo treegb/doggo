@@ -1,0 +1,89 @@
+// .Global config/style.
+@import './baseVar.scss';
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC:300,400&display=swap');
+//@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC:100,300,400&display=swap');
+// .Loading Google font ,, Noto Sans TC.
+// .Using this google free service, solves a lot of headache, since
+// chinese font font file size is big (15 MB), google doing these things
+// automatically in the background, and will only make download when necessary
+// so the bandwidth it used is very small, and you just simply need to use this
+// { @import url(...) } code to make it works.
+// .Useage: Use it like { font-family: 'Noto Sans TC', sans-serif; }
+@import url('https://fonts.googleapis.com/css?family=Caveat+Brush&display=swap');
+// .Caveat Brush. Use it with { font-family: 'Caveat Brush'; }.
+
+// .Other [ dynamic ]-[ life ] looking fonts.
+// ..Caveat: Similar to Caveat Brush, but also quite different.
+// ..Indie Flower.
+// ..Gloria Hallelujah.
+// ..Sniglet.
+// ..Concert One.
+
+$myFooColor1: red;
+$myFooColor2: green;
+
+// .In same depth (rough).
+// -----------------------
+
+// .Cmm.
+// -----------------------
+i {
+	font-style: normal;
+	// .Purpose: <i> is more convenient to use over than <span>, while still semantic correct.
+}
+.defaultText {
+	font-size: 0.9em;
+	//color: $clorGreyDark;
+}
+.defaultTextColor {
+	color: hsl(0deg, 0%, lightness($clorGrey));
+}
+a,
+a:link,
+a:visited,
+a:hover,
+a:active,
+a:link {
+  color: $clorPrimary;
+  text-decoration: none;
+  outline: 0;
+}
+
+// .Defualt button.
+// ----------------
+//button {
+//	font-size: 0.9rem;
+//	display: inline-block;
+//	min-width: $spaceS7 + $spaceS1;
+//	min-height: $spaceS5 + $spaceS3;
+//	padding: $spaceS2 ($spaceS3 * 1.4);
+//	box-sizing: border-box;
+//	border: 1px solid $clorGreyBright;
+//	border-radius: 0.5em;
+//	background-color: hsl($clorPrimaryHue, $clorPrimarySatr + 0%, $clorPrimaryLgtn + 10%);
+//	box-shadow: 0 0 5px hsla($clorPrimaryHue, 90%, 25%, 0.4);
+//	color: white;
+//	transition: all 0.12s;
+//}
+//button:hover {
+//	color: hsl($clorPrimaryHue, $clorPrimarySatr + 0%, $clorPrimaryLgtn + 10%);
+//	background-color: white;
+//	border-color: hsl($clorPrimaryHue, $clorPrimarySatr + 0%, $clorPrimaryLgtn + 10%);
+//	box-shadow: 0 0 4px hsla($clorPrimaryHue, 90%, 25%, 0.6);
+//}
+//button.withbgColor {
+//	border-color: hsl($clorPrimaryHue, $clorPrimarySatr + 0%, $clorPrimaryLgtn + 10%);
+//	background-color: white;
+//	color: hsl($clorPrimaryHue, $clorPrimarySatr + 0%, $clorPrimaryLgtn + 10%);
+//	box-shadow: 0 0 4px hsla($clorPrimaryHue, 90%, 25%, 0.6);
+//}
+//button.withbgColor:hover {
+//	background-color: hsl($clorPrimaryHue, $clorPrimarySatr + 0%, $clorPrimaryLgtn + 10%);
+//	border-color: hsl($clorPrimaryHue, $clorPrimarySatr + 0%, $clorPrimaryLgtn + 10%);
+//	color: white;
+//	box-shadow: 0 0 5px hsla($clorPrimaryHue, 90%, 25%, 0.4);
+//}
+.livelyFont {
+  font-family: "Caveat Brush", "Noto Sans TC", sans-serif;
+	font-size: 1.4em;
+}

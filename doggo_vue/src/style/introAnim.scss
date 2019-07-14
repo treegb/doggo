@@ -1,0 +1,145 @@
+@import './baseVar.scss';
+
+  // .Roughly in same concern.
+  // -------------------------
+.introAnim {
+  position: fixed;
+  top: 5em;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  background-color: white;
+    border: 5px solid red;
+
+  & .mainContent {
+    --mainContentPaddingX: 2em;
+    display: grid;
+    grid-template-columns: min-content max-content;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    padding: var(--mainContentPaddingX);
+    width: 100%;
+    box-sizing: border-box;
+          border: 3px solid pink;
+  }
+
+  // .Roughly in same concern.
+  // -------------------------
+  & .doggoLogoCtnr {
+    --doggoLogoMainScaleFactor: 1.0em;
+    // .Feel free to change this variable.
+    // .This is very safe to changed, change it to any vaue (em) you want.
+    --pivotXOfBothDoggoLogoAndLowercaseLetter: 30%;
+    --lowercaseLetterRotateMin: 33deg;
+    // .Feel free to change this variable.
+    --lowercaseLetterRotateMax: calc(180deg - var(--lowercaseLetterRotateMin));
+    --lowercaseLetterElmAmount: 4;
+    // .Feel free to change this variable.
+    --lowercaseLetterElmIndex: 0;
+    --lowercaseLetterRadiusFactor: 8.5em;
+    // .Feel free to change this variable.
+    --lowercaseLetterFont-size: 3em;
+    // .Feel free to change this variable.
+    --svgClor1: #{$clorPrimary};
+    --svgClor2: hsl(0deg, 0%, 80%);
+    --lowercaseLetterClor: #{$clorPrimary};
+
+    font-size: var(--doggoLogoMainScaleFactor);
+    position: relative;
+    width: 11em;
+    height: 14.5em;
+        border: 3px solid yellow;
+        // .Notice: Check, and make sure { .doggoLogo } { .lowercaseLetter }
+        // visible part is not going outside of this border.
+        // Though it's not a big deal too.
+  }
+  & .doggoLogoCtnr /deep/ .doggoLogo {
+    top: 50%;
+    left: var(--pivotXOfBothDoggoLogoAndLowercaseLetter);
+    width: 7em;
+  }
+  & .doggoLogoCtnr .lowercaseLetter {
+    --lowercaseLetterRotateEach: calc(
+      var(--lowercaseLetterRotateMin) +
+      var(--lowercaseLetterElmIndex) * ((var(--lowercaseLetterRotateMax) - var(--lowercaseLetterRotateMin)) / (var(--lowercaseLetterElmAmount) - 1))
+    );
+    // .This varialbe is using { --lowercaseLetterElmIndex } and { calc() },
+    // and it have to put under { .lowercaseLetter } otherwise it don't work properly.
+    // Don't know why.
+
+    position: absolute;
+    height: var(--lowercaseLetterRadiusFactor);
+    left: var(--pivotXOfBothDoggoLogoAndLowercaseLetter);
+    bottom: 50%;
+    width: 3em;
+    text-align: center;
+    transform-origin: 50% 100%;
+    transform: translateX(-50%) rotate(var(--lowercaseLetterRotateEach));
+    line-height: 1;
+        //border: 1px solid purple;
+  }
+  & .doggoLogoCtnr .lowercaseLetter i {
+    font-size: var(--lowercaseLetterFont-size);
+    font-family: 'Noto Sans TC', sans-serif;
+    // .Not necessary, just want to make it more explicit.
+    color: var(--lowercaseLetterClor);
+        //border: 1px solid blue;
+  }
+  & .doggoLogoCtnr .lowercaseLetter.one {
+    --lowercaseLetterElmIndex: 0;
+  }
+  & .doggoLogoCtnr .lowercaseLetter.two {
+    --lowercaseLetterElmIndex: 1;
+  }
+  & .doggoLogoCtnr .lowercaseLetter.three {
+    --lowercaseLetterElmIndex: 2;
+  }
+  & .doggoLogoCtnr .lowercaseLetter.four {
+    --lowercaseLetterElmIndex: 3;
+  }
+
+  // .Roughly in same concern.
+  // -------------------------
+  .subtitle {
+    padding: 1em;
+    box-sizing: border-box;
+  }
+  .subtitle i {
+    font-size: 1.6em;
+    font-family: 'Noto Sans TC', sans-serif;
+    // .Not necessary, just want to make it more explicit.
+    line-height: 1.4;
+    color: scale-color(
+      $clorPrimary,
+      $saturation: -45%,
+      $lightness: 25%
+    );
+  }
+
+  // .Roughly in same concern.
+  // -------------------------
+  .text_withAllKindOfbreeds {
+    padding: 1em;
+    padding-right: 0;
+    // .Purpose: Make it right-horizontal align with { .doggoLogoCtnr }.
+    box-sizing: border-box;
+    text-align: right;
+    line-height: 1.5;
+    // .Notice: Line height less than 1 This is easy to causing break
+    // (unexpected result) since it heavily rely on the font-family.
+    // But I don't care, it seems to works fine for the current result.
+  }
+  .text_withAllKindOfbreeds i {
+    font-size: 1.2em;
+    font-family: 'Noto Sans TC', sans-serif;
+    // .Not necessary, just want to make it more explicit.
+    letter-spacing: 0.4em;
+    color: scale-color(
+      $clorPrimary,
+      $saturation: -100%,
+      $lightness: 65%
+    );
+  }
+}

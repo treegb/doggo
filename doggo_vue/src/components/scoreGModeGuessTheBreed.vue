@@ -13,14 +13,14 @@
           class="answer wrong"
         >
           <svgSymbolCross />
-          <div class="breedName">{{ aswWrong }}</div>
+          <div class="breedName"><i class="livelyFont">{{ aswWrong }}</i></div>
         </div>
         <div
           v-if="aswCorrect"
           class="answer correct"
         >
           <svgSymbolTick />
-          <div class="breedName">{{ aswCorrect }}</div>
+          <div class="breedName"><i class="livelyFont">{{ aswCorrect }}</i></div>
         </div>
       </div>
     </div>
@@ -86,7 +86,9 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
+  @import "@/style/base.scss";
+
   h2 {
     margin-top: 10em;
     margin-bottom: 4em;
@@ -127,16 +129,13 @@ export default {
   }
   .scoreARound .answer .breedName {
     margin-left: 1em;
-    font-family: "aclonica";
   }
   .scoreARound .answer.correct .svgSymbolTick {
   }
   .scoreARound .answer.correct .breedName {
-    font-color: green;
   }
   .scoreARound .answer.wrong .svgSymbolCross {
   }
   .scoreARound .answer.wrong .breedName {
-    font-color: red;
   }
 </style>

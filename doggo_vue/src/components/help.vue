@@ -1,5 +1,20 @@
-<template>
-  <div class="help">
+<template>  <div class="help">
+    <!-- <div
+      v-show="ifShowintroAnim"
+      class="introAnim"
+    >
+      <div class="mainContent">
+        <div class="doggoLogoCtnr">
+          <doggoLogo></doggoLogo>
+          <div class="lowercaseLetter one"><i>o</i></div>
+          <div class="lowercaseLetter two"><i>g</i></div>
+          <div class="lowercaseLetter three"><i>g</i></div>
+          <div class="lowercaseLetter four"><i>o</i></div>
+        </div>
+        <div class="subtitle"><i>A dog breed guessing game</i></div>
+        <div class="text_withAllKindOfbreeds"><i>With<br>all kind of<br>breeds</i></div>
+      </div>
+    </div> -->
     <main>
       <h2>The "Game" tab</h2>
       <p>Here is were you chose your <code>game mode</code>, start a new game.</p>
@@ -24,13 +39,39 @@
 </template>
 
 <script>
-export default {
-  name: 'help',
-}
+  import doggoLogo from "@/components/svg/doggoLogo.vue"
+
+  export default {
+    name: 'help',
+    components: {
+      doggoLogo,
+    },
+    props: [
+      "ifPageIsFocused",
+    ],
+    data () {
+      return {
+        ifShowintroAnim: false,
+      };
+    },
+    mounted () {
+    },
+    watch: {
+      ifPageIsFocused (newVal, oldVal) {
+        if (newVal === true ) {
+          this.ifShowintroAnim = true;
+        } else {
+          this.ifShowintroAnim = false;
+        }
+      },
+    },
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
+  @import "@/style/introAnim.scss";
+
   main {
     margin: 0 auto;
     padding: 0 0.5em;
